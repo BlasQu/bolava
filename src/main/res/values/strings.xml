@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">Bolava</string>
-    <string name="login">Login</string>
-    <string name="register_message">Don't have an account?</string>
-    <string name="register">Register here!</string>
+    <string name="register_message">Don\'t have an account?</string>
+    <string name="login_message">Already have an account?</string>
+    <string name="register_notify">Register here!</string>
+    <string name="login_notify">Login here!</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="error">This field must not be empty!</string>
 </resources>
