@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Bolava</string>
+    <string name="login">Login</string>
+    <string name="register_message">Don't have an account?</string>
+    <string name="register">Register here!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
 </resources>
