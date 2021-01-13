@@ -10,11 +10,17 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.example.bolava.auth.AuthActivity
 import com.example.bolava.R
 import com.example.bolava.databinding.ActivitySplashBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
     private val viewmodel by viewModels<SplashViewModel>()
+
+    @Inject
+    lateinit var authActivity: AuthActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +39,7 @@ class SplashActivity : AppCompatActivity() {
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val changeActivity = Intent(this, AuthActivity::class.java)
+            val changeActivity = Intent(this, authActivity::class.java)
             startActivity(changeActivity)
             finish()
         }, 3000)

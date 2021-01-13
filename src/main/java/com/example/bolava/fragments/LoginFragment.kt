@@ -13,18 +13,18 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ActivityContext
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class LoginFragment @Inject constructor() : Fragment(R.layout.fragment_login) {
 
     private lateinit var binding: FragmentLoginBinding
     private val viewmodel by viewModels<AuthViewModel>()
-    private lateinit var authActivity: AuthActivity
+    lateinit var authActivity: AuthActivity
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentLoginBinding.bind(view)
         authActivity = activity as AuthActivity
-
         setupButtons()
 
     }

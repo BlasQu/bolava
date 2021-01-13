@@ -9,11 +9,13 @@ import com.example.bolava.databinding.ActivityAuthBinding
 import com.example.bolava.fragments.LoginFragment
 import com.example.bolava.fragments.RegisterFragment
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlin.math.log
 
 @AndroidEntryPoint
-class AuthActivity : AppCompatActivity() {
+class AuthActivity @Inject constructor() : AppCompatActivity() {
 
     @Inject
     lateinit var loginFragment: LoginFragment
@@ -40,10 +42,12 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
+    fun snackbarMessage(message: String = "Something went wrong...") {
+        Snackbar.make(binding.layout, message, Snackbar.LENGTH_SHORT).show()
+    }
+
     fun changeFragment() {
-        val getFragmentTag =
-            supportFragmentManager.getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name
-        when (getFragmentTag) {
+        when (supportFragmentManager.getBackStackEntryAt(supportFragmentManager.backStackEntryCount - 1).name) {
             "LoginFragment" -> {
                 supportFragmentManager.beginTransaction().apply {
                     replace(R.id.fragment_container, registerFragment)
@@ -60,8 +64,7 @@ class AuthActivity : AppCompatActivity() {
                 }
             }
 
-            else -> Snackbar.make(binding.layout, "Something went wrong...", Snackbar.LENGTH_SHORT)
-                .show()
+            else -> snackbarMessage()
         }
     }
 }
