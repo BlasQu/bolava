@@ -1,9 +1,7 @@
 package com.example.bolava.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -12,10 +10,8 @@ import com.example.bolava.R
 import com.example.bolava.auth.AuthActivity
 import com.example.bolava.auth.AuthViewModel
 import com.example.bolava.data.AuthState
-import com.example.bolava.data.AuthUser
 import com.example.bolava.databinding.FragmentRegisterBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,8 +38,11 @@ class RegisterFragment @Inject constructor(): Fragment(R.layout.fragment_registe
     }
 
     private fun setupRepositoryToViewModelObserver() {
-        viewmodel.authRepository.state.observe(authActivity, {
+        viewmodel.authRepository.registerState.observe(viewLifecycleOwner, {
             viewmodel.registrationState.value = it
+            if (viewmodel.authRepository.registerState.value != AuthState.EMPTY) {
+                viewmodel.authRepository.registerState.postValue(AuthState.EMPTY)
+            }
         })
     }
 
@@ -55,9 +54,10 @@ class RegisterFragment @Inject constructor(): Fragment(R.layout.fragment_registe
                         duration = resources.getInteger(R.integer.shortAnim).toLong()
                         interpolator = FastOutSlowInInterpolator()
                         alpha(0f)
-                        binding.holderProgressBar.holderProgressBar.visibility = View.VISIBLE
+                        binding.holderProgressBar.holderProgressBar.visibility = View.GONE
                     }
                     authActivity.snackbarMessage("The account has been created succesfully.")
+                    authActivity.changeToUserActivity()
                 }
                 AuthState.LOADING -> {
                     binding.holderProgressBar.holderProgressBar.animate().apply {
@@ -95,9 +95,7 @@ class RegisterFragment @Inject constructor(): Fragment(R.layout.fragment_registe
 
                 viewmodel.registerUser(binding.inputEmail.text.toString(), binding.inputPassword.text.toString())
 
-            } else {
-                authActivity.snackbarMessage("Passwords do not match. [ Min. length for passwords is 6 characters. ]")
-            }
+            } else authActivity.snackbarMessage("Passwords do not match. [ Min. length for passwords is 6 characters. ]")
         }
 
         binding.textLogin.setOnClickListener {

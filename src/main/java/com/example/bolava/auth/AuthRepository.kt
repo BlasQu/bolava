@@ -3,7 +3,6 @@ package com.example.bolava.auth
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.bolava.data.AuthState
-import com.example.bolava.data.AuthUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import kotlinx.coroutines.awaitAll
@@ -13,15 +12,28 @@ import javax.inject.Inject
 
 class AuthRepository @Inject constructor() {
 
-    val state = MutableLiveData<AuthState>(AuthState.EMPTY)
+    val registerState = MutableLiveData<AuthState>(AuthState.EMPTY)
+    val loginState = MutableLiveData<AuthState>(AuthState.EMPTY)
     private val firebaseAuth = FirebaseAuth.getInstance()
 
     fun registerUser(email: String, password: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
-            if (it.isSuccessful) state.postValue(AuthState.SUCCESS)
+            if (it.isSuccessful) {
+                registerState.postValue(AuthState.SUCCESS)
+            }
             else {
-                state.postValue(AuthState.ERROR(it.exception?.message.toString()))
-                Log.d("FIREBASE", it.exception.toString())
+                registerState.postValue(AuthState.ERROR(it.exception?.message.toString()))
+                Log.d("FIREBASE_REGISTER", it.exception.toString())
+            }
+        }
+    }
+
+    fun loginUser(email: String, password: String) {
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
+            if (it.isSuccessful) loginState.postValue(AuthState.SUCCESS)
+            else {
+                loginState.postValue(AuthState.ERROR(it.exception?.message.toString()))
+                Log.d("FIREBASE_LOGIN", it.exception.toString())
             }
         }
     }

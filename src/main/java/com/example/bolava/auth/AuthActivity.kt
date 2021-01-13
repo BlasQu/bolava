@@ -1,13 +1,18 @@
 package com.example.bolava.auth
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.bolava.R
+import com.example.bolava.data.AuthState
+import com.example.bolava.data.User
 import com.example.bolava.databinding.ActivityAuthBinding
 import com.example.bolava.fragments.LoginFragment
 import com.example.bolava.fragments.RegisterFragment
+import com.example.bolava.user.UserActivity
+import com.example.bolava.user.UserViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,8 +28,13 @@ class AuthActivity @Inject constructor() : AppCompatActivity() {
     @Inject
     lateinit var registerFragment: RegisterFragment
 
+    @Inject
+    lateinit var userActivity: UserActivity
+
     private lateinit var binding: ActivityAuthBinding
-    private val viewmodel by viewModels<AuthViewModel>()
+    private var firebaseAuth = FirebaseAuth.getInstance()
+
+    private val viewmodel by viewModels<UserViewModel>() //different viewmodel than 'AUTH' to parse data between them
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +54,22 @@ class AuthActivity @Inject constructor() : AppCompatActivity() {
 
     fun snackbarMessage(message: String = "Something went wrong...") {
         Snackbar.make(binding.layout, message, Snackbar.LENGTH_SHORT).show()
+    }
+
+    fun changeToUserActivity() {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            viewmodel.currentUser.postValue(User(currentUser.uid, currentUser.email!!))
+            val userIntent = Intent(this, userActivity::class.java)
+            startActivity(userIntent)
+            finish()
+        } else {
+            snackbarMessage()
+        }
+    }
+
+    override fun onBackPressed() {
+        //Leave empty
     }
 
     fun changeFragment() {

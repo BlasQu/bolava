@@ -9,7 +9,11 @@ import androidx.activity.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.example.bolava.auth.AuthActivity
 import com.example.bolava.R
+import com.example.bolava.data.User
 import com.example.bolava.databinding.ActivitySplashBinding
+import com.example.bolava.user.UserActivity
+import com.example.bolava.user.UserViewModel
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -17,10 +21,14 @@ import javax.inject.Inject
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
-    private val viewmodel by viewModels<SplashViewModel>()
+    private val viewmodel by viewModels<UserViewModel>()
+    private val currentUser = FirebaseAuth.getInstance().currentUser
 
     @Inject
     lateinit var authActivity: AuthActivity
+
+    @Inject
+    lateinit var userActivity: UserActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +36,6 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         animateSplashActivity()
-
     }
 
     private fun animateSplashActivity() {
@@ -39,9 +46,16 @@ class SplashActivity : AppCompatActivity() {
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            val changeActivity = Intent(this, authActivity::class.java)
-            startActivity(changeActivity)
-            finish()
+            if (currentUser == null) {
+                val changeActivity = Intent(this, authActivity::class.java)
+                startActivity(changeActivity)
+                finish()
+            } else {
+                viewmodel.currentUser.postValue(User(currentUser.uid, currentUser.email!!))
+                val changeActivity = Intent(this, userActivity::class.java)
+                startActivity(changeActivity)
+                finish()
+            }
         }, 3000)
     }
 
