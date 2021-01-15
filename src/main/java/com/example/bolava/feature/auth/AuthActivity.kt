@@ -1,23 +1,20 @@
-package com.example.bolava.auth
+package com.example.bolava.feature.auth
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.bolava.R
-import com.example.bolava.data.AuthState
 import com.example.bolava.data.User
 import com.example.bolava.databinding.ActivityAuthBinding
-import com.example.bolava.fragments.LoginFragment
-import com.example.bolava.fragments.RegisterFragment
-import com.example.bolava.user.UserActivity
-import com.example.bolava.user.UserViewModel
+import com.example.bolava.feature.auth.fragments.LoginFragment
+import com.example.bolava.feature.auth.fragments.RegisterFragment
+import com.example.bolava.feature.user.UserActivity
+import com.example.bolava.feature.user.UserViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import kotlin.math.log
 
 @AndroidEntryPoint
 class AuthActivity @Inject constructor() : AppCompatActivity() {

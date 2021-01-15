@@ -10,4 +10,7 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="error">This field must not be empty!</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout_warning">Do you really want to log out?</string>
 </resources>

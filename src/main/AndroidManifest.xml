@@ -12,9 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Bolava">
-        <activity android:name=".user.UserActivity"></activity>
-        <activity android:name=".auth.AuthActivity" />
-        <activity android:name=".splash.SplashActivity">
+        <activity android:name="com.example.bolava.feature.user.UserActivity"></activity>
+        <activity android:name="com.example.bolava.feature.auth.AuthActivity" />
+        <activity android:name="com.example.bolava.feature.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

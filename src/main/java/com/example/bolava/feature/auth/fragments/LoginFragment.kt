@@ -1,4 +1,4 @@
-package com.example.bolava.fragments
+package com.example.bolava.feature.auth.fragments
 
 import android.os.Bundle
 import android.view.View
@@ -7,26 +7,29 @@ import androidx.fragment.app.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.lifecycleScope
 import com.example.bolava.R
-import com.example.bolava.auth.AuthActivity
-import com.example.bolava.auth.AuthViewModel
+import com.example.bolava.feature.auth.AuthActivity
+import com.example.bolava.feature.auth.AuthViewModel
 import com.example.bolava.data.AuthState
-import com.example.bolava.databinding.FragmentRegisterBinding
+import com.example.bolava.databinding.FragmentLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class RegisterFragment @Inject constructor(): Fragment(R.layout.fragment_register) {
+class LoginFragment @Inject constructor() : Fragment(R.layout.fragment_login) {
 
-    private lateinit var binding: FragmentRegisterBinding
+    private lateinit var binding: FragmentLoginBinding
     private val viewmodel by viewModels<AuthViewModel>()
     private lateinit var authActivity: AuthActivity
+
+    val firebaseAuth = FirebaseAuth.getInstance()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentRegisterBinding.bind(view)
+        binding = FragmentLoginBinding.bind(view)
         authActivity = activity as AuthActivity
 
         setupButtons()
@@ -38,16 +41,17 @@ class RegisterFragment @Inject constructor(): Fragment(R.layout.fragment_registe
     }
 
     private fun setupRepositoryToViewModelObserver() {
-        viewmodel.authRepository.registerState.observe(viewLifecycleOwner, {
-            viewmodel.registrationState.value = it
-            if (viewmodel.authRepository.registerState.value != AuthState.EMPTY) {
-                viewmodel.authRepository.registerState.postValue(AuthState.EMPTY)
+        viewmodel.authRepository.loginState.observe(viewLifecycleOwner, {
+            viewmodel.loginState.value = it
+            if (viewmodel.authRepository.loginState.value != AuthState.EMPTY) {
+                viewmodel.authRepository.loginState.postValue(AuthState.EMPTY)
             }
         })
     }
 
+
     private suspend fun setupCollectors() {
-        viewmodel.registrationState.collect {
+        viewmodel.loginState.collect {
             when (it) {
                 AuthState.SUCCESS -> {
                     binding.holderProgressBar.holderProgressBar.animate().apply {
@@ -56,7 +60,7 @@ class RegisterFragment @Inject constructor(): Fragment(R.layout.fragment_registe
                         alpha(0f)
                         binding.holderProgressBar.holderProgressBar.visibility = View.GONE
                     }
-                    authActivity.snackbarMessage("The account has been created succesfully.")
+                    authActivity.snackbarMessage("Logged in succesfully.")
                     authActivity.changeToUserActivity()
                 }
                 AuthState.LOADING -> {
@@ -65,8 +69,8 @@ class RegisterFragment @Inject constructor(): Fragment(R.layout.fragment_registe
                         duration = resources.getInteger(R.integer.shortAnim).toLong()
                         interpolator = FastOutSlowInInterpolator()
                         alpha(0.8f)
-                        }
                     }
+                }
                 is AuthState.ERROR -> {
                     binding.holderProgressBar.holderProgressBar.animate().apply {
                         duration = resources.getInteger(R.integer.shortAnim).toLong()
@@ -81,24 +85,24 @@ class RegisterFragment @Inject constructor(): Fragment(R.layout.fragment_registe
     }
 
     private fun setupButtons() {
-        binding.btnRegister.setOnClickListener {
+        binding.btnLogin.setOnClickListener {
             if (binding.inputEmail.text.isEmpty()) binding.inputEmail.error =
                 resources.getString(R.string.error)
             if (binding.inputPassword.text.isEmpty()) binding.inputPassword.error =
                 resources.getString(R.string.error)
-            if (binding.inputConfirmPassword.text.isEmpty()) binding.inputConfirmPassword.error =
-                resources.getString(R.string.error)
             if (binding.inputEmail.text.isNotEmpty() &&
-                binding.inputPassword.text.isNotEmpty() &&
-                binding.inputConfirmPassword.text.isNotEmpty() &&
-                binding.inputPassword.text.toString() == binding.inputConfirmPassword.text.toString()) {
+                binding.inputPassword.text.isNotEmpty()) {
 
-                viewmodel.registerUser(binding.inputEmail.text.toString(), binding.inputPassword.text.toString())
+                val currentUser = firebaseAuth.currentUser
+                if (currentUser != null) {
+                    authActivity.snackbarMessage("You are already logged in.")
+                    authActivity.changeToUserActivity()
+                } else viewmodel.loginUser(binding.inputEmail.text.toString(), binding.inputPassword.text.toString())
 
-            } else authActivity.snackbarMessage("Passwords do not match. [ Min. length for passwords is 6 characters. ]")
+            } else authActivity.snackbarMessage("Min. length for password is 6 characters.")
         }
 
-        binding.textLogin.setOnClickListener {
+        binding.textRegister.setOnClickListener {
             authActivity.changeFragment()
         }
     }

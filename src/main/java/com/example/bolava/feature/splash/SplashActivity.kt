@@ -1,18 +1,15 @@
-package com.example.bolava.splash
+package com.example.bolava.feature.splash
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import com.example.bolava.auth.AuthActivity
+import com.example.bolava.feature.auth.AuthActivity
 import com.example.bolava.R
-import com.example.bolava.data.User
 import com.example.bolava.databinding.ActivitySplashBinding
-import com.example.bolava.user.UserActivity
-import com.example.bolava.user.UserViewModel
+import com.example.bolava.feature.user.UserActivity
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -21,7 +18,6 @@ import javax.inject.Inject
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
-    private val viewmodel by viewModels<UserViewModel>()
     private val currentUser = FirebaseAuth.getInstance().currentUser
 
     @Inject
@@ -51,7 +47,6 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(changeActivity)
                 finish()
             } else {
-                viewmodel.currentUser.postValue(User(currentUser.uid, currentUser.email!!))
                 val changeActivity = Intent(this, userActivity::class.java)
                 startActivity(changeActivity)
                 finish()

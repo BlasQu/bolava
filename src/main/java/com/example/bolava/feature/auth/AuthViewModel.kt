@@ -1,8 +1,6 @@
-package com.example.bolava.auth
+package com.example.bolava.feature.auth
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bolava.data.AuthState

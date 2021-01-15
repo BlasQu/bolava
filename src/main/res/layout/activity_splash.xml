@@ -7,6 +7,6 @@
     android:background="@drawable/app_background"
     android:id="@+id/layout"
     android:alpha="0"
-    tools:context=".splash.SplashActivity">
+    tools:context=".feature.splash.SplashActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>
