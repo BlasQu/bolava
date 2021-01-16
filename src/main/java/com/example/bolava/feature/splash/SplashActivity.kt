@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.viewModels
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.example.bolava.feature.auth.AuthActivity
 import com.example.bolava.R
+import com.example.bolava.data.User
 import com.example.bolava.databinding.ActivitySplashBinding
 import com.example.bolava.feature.user.UserActivity
+import com.example.bolava.feature.user.UserViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

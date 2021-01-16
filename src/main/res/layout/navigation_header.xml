@@ -17,7 +17,7 @@
         android:textStyle="bold"
         android:textSize="25dp"
         tools:text="Adam Adamowski"
-        android:padding="16dp"
+        android:padding="11dp"
         android:paddingStart="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

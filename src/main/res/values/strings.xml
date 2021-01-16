@@ -13,4 +13,9 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="logout_warning">Do you really want to log out?</string>
+    <string name="change_password">Change password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
+
+    <string name="maps_api_key">HIDDEN_KEY</string>
 </resources>

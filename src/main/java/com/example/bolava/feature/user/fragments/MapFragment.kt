@@ -1,13 +1,20 @@
 package com.example.bolava.feature.user.fragments
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.bolava.R
 import com.example.bolava.databinding.FragmentMapBinding
 import com.example.bolava.feature.user.UserActivity
 import com.example.bolava.feature.user.UserViewModel
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -23,6 +30,7 @@ class MapFragment @Inject constructor(
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentMapBinding.bind(view)
         userActivity = activity as UserActivity
+
     }
 
 }
