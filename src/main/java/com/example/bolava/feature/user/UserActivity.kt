@@ -1,27 +1,35 @@
 package com.example.bolava.feature.user
 
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import com.example.bolava.R
+import com.example.bolava.data.CONSTS
 import com.example.bolava.data.Dialogs
+import com.example.bolava.data.Permissions
 import com.example.bolava.data.User
 import com.example.bolava.databinding.ActivityUserBinding
 import com.example.bolava.databinding.NavigationHeaderBinding
-import com.example.bolava.databinding.ToolbarBinding
 import com.example.bolava.feature.auth.AuthActivity
 import com.example.bolava.feature.user.fragments.HistoryFragment
 import com.example.bolava.feature.user.fragments.MapFragment
 import com.example.bolava.feature.user.fragments.SettingsFragment
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,6 +56,9 @@ class UserActivity @Inject constructor(
     @Inject
     lateinit var dialogs: Dialogs
 
+    @Inject
+    lateinit var perms: Permissions
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserBinding.inflate(layoutInflater)
@@ -55,6 +66,8 @@ class UserActivity @Inject constructor(
 
         setupToolbar()
         setupFragment()
+
+        perms.checkPermissions()
 
         header = NavigationHeaderBinding.inflate(layoutInflater)
         binding.navigationView.addHeaderView(header.root)
@@ -65,6 +78,35 @@ class UserActivity @Inject constructor(
         })
 
         viewmodel.currentUser.postValue(User(firebaseAuth.currentUser!!.uid, firebaseAuth.currentUser!!.email!!))
+    }
+
+    fun requestPermissions() {
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), CONSTS.LOCATION_REQUEST)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == CONSTS.LOCATION_REQUEST && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mapFragment.createMap()
+        } else if (!shouldShowRequestPermissionRationale(permissions[0])){
+            snackbarMessage("You have rejected requested permissions. You'll be redirected to app settings in 3 seconds...")
+            Handler(Looper.getMainLooper()).postDelayed({
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
+                startActivity(intent)
+            }, 3000)
+        } else {
+            snackbarMessage("You have denied requested permissions. You'll be requested again for permissions in 3 seconds...")
+            Handler(Looper.getMainLooper()).postDelayed({
+                requestPermissions()
+            },3000)
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     private fun setupToolbar() {

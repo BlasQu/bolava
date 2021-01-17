@@ -16,6 +16,8 @@
     <string name="change_password">Change password</string>
     <string name="old_password">Old password</string>
     <string name="new_password">New password</string>
+    <string name="permissions">You need to allow all requested permissions, otherwise app won\'t be working properly.</string>
+    <string name="ok">Ok</string>
 
-    <string name="maps_api_key">HIDDEN_KEY</string>
+    <string name="google_maps_key">HIDDEN</string>
 </resources>
