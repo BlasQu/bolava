@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.bolava.R
 import com.example.bolava.databinding.FragmentMapBinding
@@ -32,7 +33,7 @@ class MapFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_map) {
 
     private lateinit var binding: FragmentMapBinding
-    private val viewmodel by viewModels<UserViewModel>()
+    private val viewmodel by activityViewModels<UserViewModel>()
     private lateinit var userActivity: UserActivity
 
     @SuppressLint("MissingPermission")

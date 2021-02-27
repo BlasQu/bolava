@@ -23,7 +23,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".feature.user.UserActivity" />
+        <activity android:name=".feature.user.UserActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden|screenLayout"/>
         <activity android:name=".feature.auth.AuthActivity" />
         <activity android:name=".feature.splash.SplashActivity">
             <intent-filter>

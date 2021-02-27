@@ -27,7 +27,7 @@ class SettingsFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_settings) {
 
     private lateinit var binding: FragmentSettingsBinding
-    val viewmodel by activityViewModels<UserViewModel>()
+    private val viewmodel by activityViewModels<UserViewModel>()
     private lateinit var userActivity: UserActivity
     private val firebaseAuth = FirebaseAuth.getInstance()
 
