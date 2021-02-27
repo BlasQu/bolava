@@ -19,5 +19,5 @@
     <string name="permissions">You need to allow all requested permissions, otherwise app won\'t be working properly.</string>
     <string name="ok">Ok</string>
 
-    <string name="google_maps_key">AIzaSyALicitB6ZY5fY1UxBkbqEYhUFDeTi6SmY</string>
+    <string name="google_maps_key">HIDDEN</string>
 </resources>
